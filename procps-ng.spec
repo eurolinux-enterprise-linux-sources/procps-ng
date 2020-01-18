@@ -4,7 +4,7 @@
 Summary: System and process monitoring utilities
 Name: procps-ng
 Version: 3.3.10
-Release: 17%{?dist}
+Release: 26%{?dist}.1
 License: GPL+ and GPLv2 and GPLv2+ and GPLv3+ and LGPLv2+
 Group: Applications/System
 URL: https://sourceforge.net/projects/procps-ng/
@@ -25,6 +25,15 @@ Patch10: procps-ng-3.3.10-sysctl-conf-manpage-predef-note.patch
 Patch11: procps-ng-3.3.10-top-instant-cpu-stats.patch
 Patch12: procps-ng-3.3.10-sysctl-man-conf-override-hint.patch
 Patch13: procps-ng-3.3.10-top-strange-mem-val-scaling.patch 
+Patch14: procps-ng-3.3.10-sysctl-empty-value-allowed.patch
+Patch15: procps-ng-3.3.10-top-locale-independent-float-delay.patch
+Patch16: procps-ng-3.3.10-free-mem-petabytes-segfault.patch
+Patch17: procps-ng-3.3.10-ps-new-option-loginid-luid.patch
+Patch18: procps-ng-3.3.10-CVE-2018-1124.patch
+Patch19: procps-ng-3.3.10-CVE-2018-1122.patch
+Patch20: procps-ng-3.3.10-recognize_sched_deadline.patch
+Patch21: procps-ng-3.3.10-free-counts-unreclaim-slabs-in-avail-mem.patch
+Patch22: procps-ng-3.3.10-top-segv-on-double-exit.patch
 
 
 Requires(post): /sbin/ldconfig
@@ -105,6 +114,15 @@ Internationalization pack for procps-ng
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
 
 
 %build
@@ -186,6 +204,46 @@ rmdir %{buildroot}/share
 %{_datadir}/locale/*
 
 %changelog
+* Mon Sep 16 2019 Jan Rybar <jrybar@redhat.com> - 3.3.10-26.el7_7.1
+- top: segfault if killed by sigterm in batch mode
+- Resolves: rhbz#1739372
+
+* Fri Apr 12 2019 Jan Rybar <jrybar@redhat.com> - 3.3.10-26
+- free: unreclaimable slabs counted into free memory, used mem incorrect
+- Resolves: rhbz#1699264
+
+* Wed Mar 27 2019 Jan Rybar <jrybar@redhat.com> - 3.3.10-25
+- ps: recognize SCHED_DEADLINE in CLS field, upstream backport
+- Resolves: rhbz#1692843
+
+* Tue Feb 26 2019 Jan Rybar <jrybar@redhat.com> - 3.3.10-24
+- top: Do not default to the cwd in configs_read()
+- Resolves: rhbz#1577023
+
+* Tue May 15 2018 Kamil Dudka <kdudka@redhat.com> - 3.3.10-23
+- check for truncation after calling snprintf()
+- Related: CVE-2018-1124
+
+* Fri May 11 2018 Kamil Dudka <kdudka@redhat.com> - 3.3.10-22
+- fix integer overflows leading to heap overflow in file2strvec()
+- Resolves: CVE-2018-1124
+
+* Thu Apr 19 2018 Jan Rybar <jrybar@redhat.com> - 3.3.10-21
+- ps: new format option LUID (LoginId)
+- Resolves: rhbz#1518986
+
+* Mon Jan 15 2018 Jan Rybar <jrybar@redhat.com> - 3.3.10-20
+- free: segfault when system memory exceeds petabytes
+- Resolves: rhbz#1263765
+
+* Mon Jan 15 2018 Jan Rybar <jrybar@redhat.com> - 3.3.10-19
+- top: locale independent float character in delay now accepted
+- Resolves: rhbz#1182248
+
+* Thu Jan 04 2018 Jan Rybar <jrybar@redhat.com> - 3.3.10-18
+- sysctl: empty value is now accepted
+- Resolves: rhbz#1507356
+
 * Wed Sep 06 2017 Jan Rybar <jrybar@redhat.com> - 3.3.10-17
 - top: strange unit scaling with high memory values
 - Resolves: rhbz#1253851

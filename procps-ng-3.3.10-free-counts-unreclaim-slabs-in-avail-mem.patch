@@ -1,0 +1,24 @@
+diff -up ./free.1.ori ./free.1
+--- ./free.1.ori	2019-04-12 13:28:22.255295567 +0200
++++ ./free.1	2019-04-12 13:29:00.666768897 +0200
+@@ -32,7 +32,7 @@ kernels 2.6.32, displayed as zero if not
+ Memory used by kernel buffers (Buffers in /proc/meminfo)
+ .TP
+ \fBcache\fR
+-Memory used by the page cache and slabs (Cached and Slab in /proc/meminfo)
++Memory used by the page cache and slabs (Cached and SReclaimable in /proc/meminfo)
+ .TP
+ \fBbuff/cache\fR
+ Sum of \fBbuffers\fR and \fBcache\fR
+diff -up ./proc/sysinfo.c.ori ./proc/sysinfo.c
+--- ./proc/sysinfo.c.ori	2019-04-12 13:28:22.241295394 +0200
++++ ./proc/sysinfo.c	2019-04-12 13:29:00.668768921 +0200
+@@ -758,7 +758,7 @@ nextline:
+   if(kb_inactive==~0UL){
+     kb_inactive = kb_inact_dirty + kb_inact_clean + kb_inact_laundry;
+   }
+-  kb_main_cached = kb_page_cache + kb_slab;
++  kb_main_cached = kb_page_cache + kb_slab_reclaimable;
+   kb_swap_used = kb_swap_total - kb_swap_free;
+   kb_main_used = kb_main_total - kb_main_free - kb_main_cached - kb_main_buffers;
+ 

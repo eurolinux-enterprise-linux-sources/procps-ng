@@ -1,0 +1,61 @@
+diff -up ./ps/output.c.ori ./ps/output.c
+--- ./ps/output.c.ori	2018-04-19 15:18:36.510737173 +0200
++++ ./ps/output.c	2018-04-19 15:18:07.850849743 +0200
+@@ -1087,6 +1087,34 @@ static int pr_fuid(char *restrict const
+   return snprintf(outbuf, COLWID, "%d", pp->fuid);
+ }
+ 
++/* LoginID implementation */
++static int pr_luid(char *restrict const outbuf, const proc_t *restrict const pp){
++    char filename[48];
++    ssize_t num_read;
++    int fd;
++    u_int32_t luid;
++
++    snprintf(filename, sizeof filename, "/proc/%d/loginuid", pp->tgid);
++
++    if ((fd = open(filename, O_RDONLY, 0)) != -1) {
++        num_read = read(fd, outbuf, OUTBUF_SIZE - 1);
++        close(fd);
++        if (num_read > 0) {
++            outbuf[num_read] = '\0';
++
++            // processes born before audit have no LoginID set
++            luid = (u_int32_t) atoi(outbuf);
++            if (luid != -1)
++                return num_read;
++        }
++    }
++    outbuf[0] = '-';
++    outbuf[1] = '\0';
++    num_read = 1;
++    return num_read;
++}
++
++
+ // The Open Group Base Specifications Issue 6 (IEEE Std 1003.1, 2004 Edition)
+ // requires that user and group names print as decimal numbers if there is
+ // not enough room in the column.  However, we will now truncate such names
+@@ -1531,7 +1559,7 @@ static const format_struct format_array[
+ {"lsession",  "SESSION", pr_sd_session, sr_nop,  11,  SD,    LNX, ET|LEFT},
+ #endif
+ {"lstart",    "STARTED", pr_lstart,   sr_nop,    24,   0,    XXX, ET|RIGHT},
+-{"luid",      "LUID",    pr_nop,      sr_nop,     5,   0,    LNX, ET|RIGHT}, /* login ID */
++{"luid",      "LUID",    pr_luid,     sr_nop,     5,   0,    LNX, ET|RIGHT}, /* login ID */
+ {"luser",     "LUSER",   pr_nop,      sr_nop,     8, USR,    LNX, ET|USER}, /* login USER */
+ {"lwp",       "LWP",     pr_tasks,    sr_tasks,   5,   0,    SUN, TO|PIDMAX|RIGHT},
+ {"m_drs",     "DRS",     pr_drs,      sr_drs,     5, MEM,    LNx, PO|RIGHT},
+diff -up ./ps/ps.1.ori ./ps/ps.1
+--- ./ps/ps.1.ori	2018-04-19 15:18:36.510737173 +0200
++++ ./ps/ps.1	2018-04-19 15:18:25.175781694 +0200
+@@ -1353,6 +1353,10 @@ displays the login session identifier of
+ if systemd support has been included.
+ T}
+ 
++luid	LUID	T{
++displays Login ID associated with a process.
++T}
++
+ lwp	LWP	T{
+ light weight process (thread) ID of the dispatchable entity (alias
+ .BR spid , \ tid ).

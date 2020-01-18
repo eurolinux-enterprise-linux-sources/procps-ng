@@ -1,0 +1,97 @@
+diff -up ./free.1.orig ./free.1
+--- ./free.1.orig	2018-01-16 16:11:35.609874589 +0100
++++ ./free.1	2018-01-17 14:33:04.625716399 +0100
+@@ -62,6 +62,9 @@ Display the amount of memory in gigabyte
+ \fB\-\-tera\fR
+ Display the amount of memory in terabytes.
+ .TP
++\fB\-\-peta\fR
++Display the amount of memory in petabytes.
++.TP
+ \fB\-h\fR, \fB\-\-human\fP
+ Show all output fields automatically scaled to shortest three digit unit and
+ display the units of print out.  Following units are used.
+@@ -72,9 +75,10 @@ display the units of print out.  Followi
+   M = megas
+   G = gigas
+   T = teras
++  P = petas
+ .fi
+ .sp
+-If unit is missing, and you have petabyte of RAM or swap, the number is in
++If unit is missing, and you have exabyte of RAM or swap, the number is in
+ terabytes and columns might not be aligned with header.
+ .TP
+ \fB\-w\fR, \fB\-\-wide\fR
+diff -up ./free.c.orig ./free.c
+--- ./free.c.orig	2018-01-16 16:10:27.058158964 +0100
++++ ./free.c	2018-01-17 14:58:06.723658091 +0100
+@@ -78,6 +78,7 @@ static void __attribute__ ((__noreturn__
+ 	fputs(_(" -m, --mega          show output in megabytes\n"), out);
+ 	fputs(_(" -g, --giga          show output in gigabytes\n"), out);
+ 	fputs(_("     --tera          show output in terabytes\n"), out);
++	fputs(_("     --peta          show output in petabytes\n"), out);
+ 	fputs(_(" -h, --human         show human-readable output\n"), out);
+ 	fputs(_("     --si            use powers of 1000 not 1024\n"), out);
+ 	fputs(_(" -l, --lohi          show detailed low and high memory statistics\n"), out);
+@@ -101,7 +102,7 @@ double power(unsigned int base, unsigned
+ /* idea of this function is copied from top size scaling */
+ static const char *scale_size(unsigned long size, int flags, struct commandline_arguments args)
+ {
+-	static char nextup[] = { 'B', 'K', 'M', 'G', 'T', 0 };
++	static char nextup[] = { 'B', 'K', 'M', 'G', 'T', 'P', 0 };
+ 	static char buf[BUFSIZ];
+ 	int i;
+ 	char *up;
+@@ -163,6 +164,7 @@ static const char *scale_size(unsigned l
+ 		case 3:
+ 		case 4:
+ 		case 5:
++		case 6:
+ 			if (4 >=
+ 			    snprintf(buf, sizeof(buf), "%.1f%c",
+ 				     (float)(size / power(base, i - 2)), *up))
+@@ -172,14 +174,14 @@ static const char *scale_size(unsigned l
+ 				     (long)(size / power(base, i - 2)), *up))
+ 				return buf;
+ 			break;
+-		case 6:
++		case 7:
+ 			break;
+ 		}
+ 	}
+ 	/*
+-	 * On system where there is more than petabyte of memory or swap the
++	 * On system where there is more than exbibyte of memory or swap the
+ 	 * output does not fit to column. For incoming few years this should
+-	 * not be a big problem (wrote at Apr, 2011).
++	 * not be a big problem (wrote at Apr, 2015).
+ 	 */
+ 	return buf;
+ }
+@@ -197,6 +199,7 @@ int main(int argc, char **argv)
+ 	enum {
+ 		SI_OPTION = CHAR_MAX + 1,
+ 		TERA_OPTION,
++		PETA_OPTION,
+ 		HELP_OPTION
+ 	};
+ 
+@@ -206,6 +209,7 @@ int main(int argc, char **argv)
+ 		{  "mega",	no_argument,	    NULL,  'm'		},
+ 		{  "giga",	no_argument,	    NULL,  'g'		},
+ 		{  "tera",	no_argument,	    NULL,  TERA_OPTION	},
++		{  "peta",	no_argument,	    NULL,  PETA_OPTION	},
+ 		{  "human",	no_argument,	    NULL,  'h'		},
+ 		{  "si",	no_argument,	    NULL,  SI_OPTION	},
+ 		{  "lohi",	no_argument,	    NULL,  'l'		},
+@@ -248,6 +252,9 @@ int main(int argc, char **argv)
+ 		case TERA_OPTION:
+ 			args.exponent = 5;
+ 			break;
++		case PETA_OPTION:
++			args.exponent = 6;
++			break;
+ 		case 'h':
+ 			flags |= FREE_HUMANREADABLE;
+ 			break;
