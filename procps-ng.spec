@@ -4,7 +4,7 @@
 Summary: System and process monitoring utilities
 Name: procps-ng
 Version: 3.3.10
-Release: 17%{?dist}
+Release: 17%{?dist}.2
 License: GPL+ and GPLv2 and GPLv2+ and GPLv3+ and LGPLv2+
 Group: Applications/System
 URL: https://sourceforge.net/projects/procps-ng/
@@ -25,6 +25,7 @@ Patch10: procps-ng-3.3.10-sysctl-conf-manpage-predef-note.patch
 Patch11: procps-ng-3.3.10-top-instant-cpu-stats.patch
 Patch12: procps-ng-3.3.10-sysctl-man-conf-override-hint.patch
 Patch13: procps-ng-3.3.10-top-strange-mem-val-scaling.patch 
+Patch18: procps-ng-3.3.10-CVE-2018-1124.patch
 
 
 Requires(post): /sbin/ldconfig
@@ -105,6 +106,7 @@ Internationalization pack for procps-ng
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch18 -p1
 
 
 %build
@@ -186,6 +188,14 @@ rmdir %{buildroot}/share
 %{_datadir}/locale/*
 
 %changelog
+* Tue May 15 2018 Kamil Dudka <kdudka@redhat.com> - 3.3.10-17.el7_5.2
+- check for truncation after calling snprintf()
+- Related: CVE-2018-1124
+
+* Fri May 11 2018 Kamil Dudka <kdudka@redhat.com> - 3.3.10-17.el7_5.1
+- fix integer overflows leading to heap overflow in file2strvec()
+- Resolves: CVE-2018-1124
+
 * Wed Sep 06 2017 Jan Rybar <jrybar@redhat.com> - 3.3.10-17
 - top: strange unit scaling with high memory values
 - Resolves: rhbz#1253851
