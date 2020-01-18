@@ -1,0 +1,12 @@
+diff -up ./sysctl.c.ori ./sysctl.c
+--- ./sysctl.c.ori	2018-01-04 16:56:26.705925767 +0100
++++ ./sysctl.c	2018-01-04 16:56:40.365877248 +0100
+@@ -379,7 +379,7 @@ static int WriteSetting(const char *sett
+ 	/* point to the value in name=value */
+ 	value = equals + 1;
+ 
+-	if (!*name || !*value || name == equals) {
++	if (!*name || name == equals) {
+ 		xwarnx(_("malformed setting \"%s\""), setting);
+ 		return -2;
+ 	}

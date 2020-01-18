@@ -4,7 +4,7 @@
 Summary: System and process monitoring utilities
 Name: procps-ng
 Version: 3.3.10
-Release: 17%{?dist}.2
+Release: 23%{?dist}
 License: GPL+ and GPLv2 and GPLv2+ and GPLv3+ and LGPLv2+
 Group: Applications/System
 URL: https://sourceforge.net/projects/procps-ng/
@@ -25,6 +25,10 @@ Patch10: procps-ng-3.3.10-sysctl-conf-manpage-predef-note.patch
 Patch11: procps-ng-3.3.10-top-instant-cpu-stats.patch
 Patch12: procps-ng-3.3.10-sysctl-man-conf-override-hint.patch
 Patch13: procps-ng-3.3.10-top-strange-mem-val-scaling.patch 
+Patch14: procps-ng-3.3.10-sysctl-empty-value-allowed.patch
+Patch15: procps-ng-3.3.10-top-locale-independent-float-delay.patch
+Patch16: procps-ng-3.3.10-free-mem-petabytes-segfault.patch
+Patch17: procps-ng-3.3.10-ps-new-option-loginid-luid.patch
 Patch18: procps-ng-3.3.10-CVE-2018-1124.patch
 
 
@@ -106,6 +110,10 @@ Internationalization pack for procps-ng
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
 %patch18 -p1
 
 
@@ -188,13 +196,29 @@ rmdir %{buildroot}/share
 %{_datadir}/locale/*
 
 %changelog
-* Tue May 15 2018 Kamil Dudka <kdudka@redhat.com> - 3.3.10-17.el7_5.2
+* Tue May 15 2018 Kamil Dudka <kdudka@redhat.com> - 3.3.10-23
 - check for truncation after calling snprintf()
 - Related: CVE-2018-1124
 
-* Fri May 11 2018 Kamil Dudka <kdudka@redhat.com> - 3.3.10-17.el7_5.1
+* Fri May 11 2018 Kamil Dudka <kdudka@redhat.com> - 3.3.10-22
 - fix integer overflows leading to heap overflow in file2strvec()
 - Resolves: CVE-2018-1124
+
+* Thu Apr 19 2018 Jan Rybar <jrybar@redhat.com> - 3.3.10-21
+- ps: new format option LUID (LoginId)
+- Resolves: rhbz#1518986
+
+* Mon Jan 15 2018 Jan Rybar <jrybar@redhat.com> - 3.3.10-20
+- free: segfault when system memory exceeds petabytes
+- Resolves: rhbz#1263765
+
+* Mon Jan 15 2018 Jan Rybar <jrybar@redhat.com> - 3.3.10-19
+- top: locale independent float character in delay now accepted
+- Resolves: rhbz#1182248
+
+* Thu Jan 04 2018 Jan Rybar <jrybar@redhat.com> - 3.3.10-18
+- sysctl: empty value is now accepted
+- Resolves: rhbz#1507356
 
 * Wed Sep 06 2017 Jan Rybar <jrybar@redhat.com> - 3.3.10-17
 - top: strange unit scaling with high memory values
