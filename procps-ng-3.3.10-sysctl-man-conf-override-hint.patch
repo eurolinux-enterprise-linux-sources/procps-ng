@@ -1,0 +1,12 @@
+diff -up ./sysctl.8.ori ./sysctl.8
+--- ./sysctl.8.ori	2014-09-23 13:40:36.000000000 +0200
++++ ./sysctl.8	2017-05-31 14:43:08.323364474 +0200
+@@ -78,7 +78,7 @@ values listing.
+ Print value without new line.
+ .TP
+ \fB\-\-system\fR
+-Load settings from all system configuration files.
++Load settings from all system configuration files. Files are read from directories in the following list in given order from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+ .br
+ /run/sysctl.d/*.conf
+ .br

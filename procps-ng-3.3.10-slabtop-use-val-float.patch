@@ -1,0 +1,21 @@
+diff -up ./proc/slab.c.ori ./proc/slab.c
+--- ./proc/slab.c.ori	2017-03-13 17:14:22.684744976 +0100
++++ ./proc/slab.c	2017-03-13 17:14:28.836719945 +0100
+@@ -179,7 +179,7 @@ static int parse_slabinfo20(struct slab_
+ 		curr->cache_size = (unsigned long)curr->nr_slabs * curr->pages_per_slab * page_size;
+ 
+ 		if (curr->nr_objs) {
+-			curr->use = 100 * curr->nr_active_objs / curr->nr_objs;
++			curr->use = 100 * (float)curr->nr_active_objs / curr->nr_objs;
+ 			stats->nr_active_caches++;
+ 		} else
+ 			curr->use = 0;
+@@ -258,7 +258,7 @@ static int parse_slabinfo11(struct slab_
+ 		curr->cache_size = (unsigned long)curr->nr_slabs * curr->pages_per_slab * page_size;
+ 
+ 		if (curr->nr_objs) {
+-			curr->use = 100 * curr->nr_active_objs / curr->nr_objs;
++			curr->use = 100 * (float)curr->nr_active_objs / curr->nr_objs;
+ 			stats->nr_active_caches++;
+ 		} else
+ 			curr->use = 0;

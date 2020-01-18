@@ -1,0 +1,13 @@
+diff -aur procps-ng-3.3.10/ps/output.c ../procps-ng-3.3.10/ps/output.c
+--- procps-ng-3.3.10/ps/output.c	2014-09-23 13:40:36.000000000 +0200
++++ ../procps-ng-3.3.10/ps/output.c	2016-06-06 18:58:36.267123736 +0200
+@@ -1622,8 +1622,8 @@
+ {"sz",        "SZ",      pr_sz,       sr_nop,     5,   0,    HPU, PO|RIGHT},
+ {"taskid",    "TASKID",  pr_nop,      sr_nop,     5,   0,    SUN, TO|PIDMAX|RIGHT}, // is this a thread ID?
+ {"tdev",      "TDEV",    pr_nop,      sr_nop,     4,   0,    XXX, AN|RIGHT},
+-{"thcount",   "THCNT",   pr_nlwp,     sr_nlwp,    5,   0,    AIX, PO|RIGHT},
+ {"tgid",      "TGID",    pr_procs,    sr_procs,   5,   0,    LNX, PO|PIDMAX|RIGHT},
++{"thcount",   "THCNT",   pr_nlwp,     sr_nlwp,    5,   0,    AIX, PO|RIGHT},
+ {"tid",       "TID",     pr_tasks,    sr_tasks,   5,   0,    AIX, TO|PIDMAX|RIGHT},
+ {"time",      "TIME",    pr_time,     sr_time,    8,   0,    U98, ET|RIGHT}, /*cputime*/ /* was 6 wide */
+ {"timeout",   "TMOUT",   pr_nop,      sr_nop,     5,   0,    LNX, AN|RIGHT}, // 2.0.xx era

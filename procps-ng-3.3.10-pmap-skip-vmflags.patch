@@ -1,0 +1,15 @@
+diff -Naur procps-ng-3.3.10.orig/pmap.c procps-ng-3.3.10/pmap.c
+--- procps-ng-3.3.10.orig/pmap.c	2014-09-23 13:40:36.000000000 +0200
++++ procps-ng-3.3.10/pmap.c	2015-11-24 10:47:24.764107976 +0100
+@@ -629,9 +629,9 @@
+ 					diff = 0;
+ 					continue;
+ 				}
+-				/* Other keys */
+-				continue;
+ 			}
++			/* Anything else starting with A-Z? -> skip it (rhbz#1262864) */
++			continue;
+ 		}
+ 		sscanf(mapbuf, "%" KLF "x-%" KLF "x %31s %llx %x:%x %llu", &start,
+ 		       &end, perms, &file_offset, &dev_major, &dev_minor,

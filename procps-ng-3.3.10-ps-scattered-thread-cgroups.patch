@@ -1,0 +1,69 @@
+diff --git a/ps/output.c b/ps/output.c
+index 501e29a..5f011b1 100644
+--- a/ps/output.c
++++ b/ps/output.c
+@@ -1343,6 +1343,41 @@
+   return snprintf(outbuf, COLWID, "%s", vals[lines_to_next_header%4u]);
+ }
+ 
++static int pr_thcgr(char *restrict const outbuf, const proc_t *restrict const pp){
++  char filename[48];
++  FILE *fd;
++  int counter = 0;
++  int c;
++  int is_cgroup = 0;
++
++  outbuf[0]='\0';
++  snprintf(filename, sizeof filename, "/proc/%d/task/%d/cgroup", pp->tgid, pp->tid);
++  fd = fopen(filename, "r");
++  if (likely(fd == NULL)) goto fail;
++  while (( (c = fgetc(fd)) != EOF) && (counter<665)) {
++    if (is_cgroup == 0) {
++      if (c == ':') {
++        is_cgroup = 1;
++        if (counter>0)
++          outbuf[counter++]=';';
++      }
++    }else
++      if ((c == '\n') || (c == '\0'))
++        is_cgroup = 0;
++      else
++        outbuf[counter++]=c;
++  }
++  outbuf[counter]='\0';
++  fclose(fd);
++  if (counter>0)
++    return counter;
++fail:
++  outbuf[0] = '-';
++  outbuf[1] = '\0';
++  return 1;
++}
++
++
+ /***************************************************************************/
+ /*************************** other stuff ***********************************/
+ 
+@@ -1623,6 +1658,7 @@
+ {"taskid",    "TASKID",  pr_nop,      sr_nop,     5,   0,    SUN, TO|PIDMAX|RIGHT}, // is this a thread ID?
+ {"tdev",      "TDEV",    pr_nop,      sr_nop,     4,   0,    XXX, AN|RIGHT},
+ {"tgid",      "TGID",    pr_procs,    sr_procs,   5,   0,    LNX, PO|PIDMAX|RIGHT},
++{"thcgr",     "THCGR",   pr_thcgr,    sr_nop,    35,   0,    LNX, PO|LEFT},  /* thread cgroups */
+ {"thcount",   "THCNT",   pr_nlwp,     sr_nlwp,    5,   0,    AIX, PO|RIGHT},
+ {"tid",       "TID",     pr_tasks,    sr_tasks,   5,   0,    AIX, TO|PIDMAX|RIGHT},
+ {"time",      "TIME",    pr_time,     sr_time,    8,   0,    U98, ET|RIGHT}, /*cputime*/ /* was 6 wide */
+diff --git a/ps/ps.1 b/ps/ps.1
+index b90adc8..b8d6c81 100644
+--- a/ps/ps.1
++++ b/ps/ps.1
+@@ -1713,6 +1713,10 @@
+ It is the process ID of the thread group leader.
+ T}
+ 
++thcgr	THCGR	T{
++display control groups to which the thread belongs.
++T}
++
+ thcount	THCNT	T{
+ see
+ .BR nlwp .
