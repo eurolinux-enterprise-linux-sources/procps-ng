@@ -1,0 +1,82 @@
+diff -up ./man-po/fr.po.ori ./man-po/fr.po
+--- ./man-po/fr.po.ori	2014-09-23 13:40:36.000000000 +0200
++++ ./man-po/fr.po	2019-03-27 13:52:01.636939773 +0100
+@@ -4593,6 +4593,9 @@ msgstr "Le programme B<watch> a été é
+ #~ msgid "IDL\tSCHED_IDLE\n"
+ #~ msgstr "IDL\tSCHED_IDLE\n"
+ 
++#~ msgid "DLN\tSCHED_DEADLINE\n"
++#~ msgstr "DLN\tSCHED_DEADLINE\n"
++
+ #~ msgid "?\tunknown value\n"
+ #~ msgstr "?\tvaleur inconnue\n"
+ 
+@@ -5200,11 +5203,11 @@ msgstr "Le programme B<watch> a été é
+ #~ msgid "scheduling policy of the process.  The policies SCHED_OTHER (SCHED_NORMAL),\n"
+ #~ msgstr "Ordonnancement de la politique du processus. Les politiques SCHED_OTHER (SCHED_NORMAL),\n"
+ 
+-#~ msgid "SCHED_FIFO, SCHED_RR, SCHED_BATCH, SCHED_ISO, and SCHED_IDLE are respectively\n"
+-#~ msgstr "SCHED_FIFO, SCHED_RR, SCHED_BATCH, SCHED_ISO et SCHED_IDLE sont respectivement\n"
++#~ msgid "SCHED_FIFO, SCHED_RR, SCHED_BATCH, SCHED_ISO, SCHED_IDLE and SCHED_DEADLINE are respectively\n"
++#~ msgstr "SCHED_FIFO, SCHED_RR, SCHED_BATCH, SCHED_ISO, SCHED_IDLE et SCHED_DEADLINE sont respectivement\n"
+ 
+-#~ msgid "displayed as 0, 1, 2, 3, 4, and 5.\n"
+-#~ msgstr "affichées comme 0, 1, 2, 3, 4 et 5.\n"
++#~ msgid "displayed as 0, 1, 2, 3, 4, 5 and 6.\n"
++#~ msgstr "affichées comme 0, 1, 2, 3, 4, 5 et 6.\n"
+ 
+ #~ msgid "seat\tSEAT\tT{\n"
+ #~ msgstr "seat\tSEAT\tT{\n"
+diff -up ./ps/output.c.ori ./ps/output.c
+--- ./ps/output.c.ori	2019-03-27 13:51:51.072812431 +0100
++++ ./ps/output.c	2019-03-27 13:52:01.638939797 +0100
+@@ -674,7 +674,7 @@ static int pr_class(char *restrict const
+   case  3: return snprintf(outbuf, COLWID, "B");   // SCHED_BATCH
+   case  4: return snprintf(outbuf, COLWID, "ISO"); // reserved for SCHED_ISO (Con Kolivas)
+   case  5: return snprintf(outbuf, COLWID, "IDL"); // SCHED_IDLE
+-  case  6: return snprintf(outbuf, COLWID, "#6");  //
++  case  6: return snprintf(outbuf, COLWID, "DLN"); // SCHED_DEADLINE
+   case  7: return snprintf(outbuf, COLWID, "#7");  //
+   case  8: return snprintf(outbuf, COLWID, "#8");  //
+   case  9: return snprintf(outbuf, COLWID, "#9");  //
+diff -up ./ps/ps.1.ori ./ps/ps.1
+--- ./ps/ps.1.ori	2019-03-27 13:51:51.073812443 +0100
++++ ./ps/ps.1	2019-03-27 13:52:01.639939809 +0100
+@@ -1138,6 +1138,8 @@ ISO	SCHED_ISO
+ .br
+ IDL	SCHED_IDLE
+ .br
++DLN	SCHED_DEADLINE
++.br
+ ?	unknown value
+ T}
+ 
+@@ -1160,6 +1162,8 @@ ISO	SCHED_ISO
+ .br
+ IDL	SCHED_IDLE
+ .br
++DLN	SCHED_DEADLINE
++.br
+ ?	unknown value
+ T}
+ 
+@@ -1485,6 +1489,8 @@ ISO	SCHED_ISO
+ .br
+ IDL	SCHED_IDLE
+ .br
++DLN	SCHED_DEADLINE
++.br
+ ?	unknown value
+ T}
+ 
+@@ -1553,8 +1559,8 @@ T}
+ 
+ sched	SCH	T{
+ scheduling policy of the process.  The policies SCHED_OTHER (SCHED_NORMAL),
+-SCHED_FIFO, SCHED_RR, SCHED_BATCH, SCHED_ISO, and SCHED_IDLE are respectively
+-displayed as 0, 1, 2, 3, 4, and 5.
++SCHED_FIFO, SCHED_RR, SCHED_BATCH, SCHED_ISO, SCHED_IDLE and SCHED_DEADLINE are
++respectively displayed as 0, 1, 2, 3, 4, 5 and 6.
+ T}
+ 
+ seat	SEAT	T{

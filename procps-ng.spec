@@ -4,7 +4,7 @@
 Summary: System and process monitoring utilities
 Name: procps-ng
 Version: 3.3.10
-Release: 23%{?dist}
+Release: 26%{?dist}
 License: GPL+ and GPLv2 and GPLv2+ and GPLv3+ and LGPLv2+
 Group: Applications/System
 URL: https://sourceforge.net/projects/procps-ng/
@@ -30,6 +30,9 @@ Patch15: procps-ng-3.3.10-top-locale-independent-float-delay.patch
 Patch16: procps-ng-3.3.10-free-mem-petabytes-segfault.patch
 Patch17: procps-ng-3.3.10-ps-new-option-loginid-luid.patch
 Patch18: procps-ng-3.3.10-CVE-2018-1124.patch
+Patch19: procps-ng-3.3.10-CVE-2018-1122.patch
+Patch20: procps-ng-3.3.10-recognize_sched_deadline.patch
+Patch21: procps-ng-3.3.10-free-counts-unreclaim-slabs-in-avail-mem.patch
 
 
 Requires(post): /sbin/ldconfig
@@ -115,6 +118,9 @@ Internationalization pack for procps-ng
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
 
 
 %build
@@ -196,6 +202,18 @@ rmdir %{buildroot}/share
 %{_datadir}/locale/*
 
 %changelog
+* Fri Apr 12 2019 Jan Rybar <jrybar@redhat.com> - 3.3.10-26
+- free: unreclaimable slabs counted into free memory, used mem incorrect
+- Resolves: rhbz#1699264
+
+* Wed Mar 27 2019 Jan Rybar <jrybar@redhat.com> - 3.3.10-25
+- ps: recognize SCHED_DEADLINE in CLS field, upstream backport
+- Resolves: rhbz#1692843
+
+* Tue Feb 26 2019 Jan Rybar <jrybar@redhat.com> - 3.3.10-24
+- top: Do not default to the cwd in configs_read()
+- Resolves: rhbz#1577023
+
 * Tue May 15 2018 Kamil Dudka <kdudka@redhat.com> - 3.3.10-23
 - check for truncation after calling snprintf()
 - Related: CVE-2018-1124
